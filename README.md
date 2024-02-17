@@ -3,9 +3,9 @@ Electromagnetic formulas, simulation softwares and codes
 
 The goal of these codes is knockout the complex physics electromagnetic equations and calculations by few lines of MATLAB and Python codes. It is head of complex physics electromagnetic equations and calculations, It goes straight to the point instead of giving foliage for solving the problem immediately.
 
-All of physics electromagnetic chapter of a book gathered together in few lines of MATLAB and Python codes here. For example deriving and calculating Poynting Vector integral from farfield radiation electricity field equation for calculating most critical antenna behaviors such as radiated power and radiation resistance in few lines of Python code:
+All of a physics electromagnetic chapter equations of a book gathered together in few lines of MATLAB and Python codes here. For example deriving and calculating Poynting Vector integral from farfield radiation electricity field equation for calculating most critical antenna behaviors such as radiated power and radiation resistance in few lines of Python code:
 
-short dipole equations 
+short dipole antenna equations 
 
 ```
 import sympy as sp
@@ -24,3 +24,12 @@ Radiation_resistance = Rr.subs([(eth0, 377), (l, 0.1), (K, 2*sp.pi/6)]).evalf() 
 print(Power)
 print(Radiation_resistance)
 ```
+
+In addition to printing short dipole antenna equations in the prettiest way use this code as below by continue of above code, Also mentioned in `shortdipoleEquations.ipynb` code completely:
+
+```
+from sympy import init_printing
+init_printing()
+```
+
+![image1](shortdipoleEquations.jpg)
