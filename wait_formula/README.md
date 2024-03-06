@@ -32,6 +32,6 @@ finally:
 norm_deltaZ_re.evalf()
 ```
 
-It calculate normalized radiation resistance part of a sample antenna which is related to ground wave propagation only (see below image for more info), In few lines of codes!
+It calculate normalized radiation resistance (=Real{4π∆Z/η}) of a sample antenna which is related only to ground wave propagation part (see below image for more info), In few lines of codes!
 
 ![image2](DeltaZ.jpg)
