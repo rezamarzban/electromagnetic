@@ -1,4 +1,7 @@
-wait's formula from Norton-Sommerfeld equation is very complex, To calculating this confusing formula by `sympy` run below codes at Jupyter Notebook:
+Wait's formula:
+![image1](Wait_formula.jpg)
+
+Very complex Wait's formula is derived from Norton-Sommerfeld equations, To calculating this confusing formula by `sympy` run below codes at Jupyter Notebook:
 
 ```
 from sympy import *
@@ -29,4 +32,4 @@ finally:
 norm_deltaZ_re.evalf()
 ```
 
-It calculate normalized radiation resistance part which is related to ground wave propagation in few lines of codes!
+It calculate normalized radiation resistance part of antenna which is related to ground wave propagation only, In few lines of codes!
