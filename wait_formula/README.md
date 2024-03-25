@@ -1,7 +1,7 @@
 Wait's formula:
 ![image1](Wait_formula.jpg)
 
-Very complex Wait's formula is derived from Norton-Sommerfeld equations, To calculating this confusing formula by `Symbolic` package at `Octave` use `Wait_formula.m` file aa below. Also be noticed that `SymPy` is lacking to solve and calculating complex integrals with imaginary part! while `Symbolic` package at `Octave` which use `SymPy` doesn't lack:
+Very complex Wait's formula is derived from Norton-Sommerfeld equations, To calculating this confusing formula by `Symbolic` package at `Octave` use `Wait_formula.m` file as below. Also be noticed that `SymPy` is lacking to solve and calculating complex integrals with imaginary part! But `Symbolic` package at `Octave` which use `SymPy` doesn't lack:
 
 ```
 pkg load symbolic
@@ -27,3 +27,5 @@ norm_deltaZ_re = real(double(norm) * (double(expr1) + double(expr2) + double(exp
 It calculate normalized radiation resistance (=Real{4π∆Z/η}) of a sample antenna which is related only to ground wave propagation part (see below image for more info), In few lines of codes!
 
 ![image2](DeltaZ.jpg)
+
+It is recommended to use `MATLAB` and `Altair FEKO`, `ANSYS Maxwell ` and etc to calculating and simulating electromagnetic problems.
