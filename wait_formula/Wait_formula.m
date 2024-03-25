@@ -13,5 +13,4 @@ expr3 = -cos(beta*h)^2*int(exp(-1i*2*beta*rho)/rho, rho, a, inf);
 
 norm = 4*pi*expr0/eta;
 
-norm_deltaZ_re = real(norm * (expr1 + expr2 + expr3));
-vpa(norm_deltaZ_re)
+norm_deltaZ_re = real(double(norm) * (double(expr1) + double(expr2) + double(expr3)))
