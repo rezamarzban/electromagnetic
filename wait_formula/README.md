@@ -126,13 +126,14 @@ console.log(norm_deltaZ_re);
 
 #### Numerical method:
 
-trapz() computes the approximate integral via the trapezoidal method with unit spacing, In this case any integral calculation will be simple and easy for many softwares, At MATLAB , Octave and Python, The calculation result via numerical method will be correct. But C++ and JavaScript calculation result via numerical method will be wrong exactly same as Octave symbolic package calculation result however code is correct. See `numerical` folder.
+trapz() computes the approximate integral via the trapezoidal method with unit spacing, In this case any integral calculation will be simple and easy for many softwares, At MATLAB , Octave, Python and FORTRAN, The calculation result via numerical method will be correct. But C++ and JavaScript calculation result via numerical method will be wrong exactly same as Octave symbolic package calculation result however code is correct. See `numerical` folder.
 
 #### Calculation result via numerical method at softwares:
 
 * MATLAB: True
 * Octave: True
 * Python: True
+* FORTRAN: True
 * C++: False
 * JavaScript: False
 
