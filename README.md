@@ -34,7 +34,7 @@ init_printing()
 
 ![image1](shortdipoleEquations.jpg)
 
-Also here is various numerical method codes in different languages (MATLAB, Python, C++, JavaScript, HTML), The `shortdipoleNumerical.js` code can be used at `Math Notepad` which powered by `mathjs.org`, I mean that it need `mathjs` library to running, Just with a web browser without any software installation. Guidance: 
+Also here is various numerical method codes in different languages (MATLAB, Python, FORTRAN, C++, JavaScript, HTML), The `shortdipoleNumerical.js` code can be used at `Math Notepad` which powered by `mathjs.org`, I mean that it need `mathjs` library to running, Just with a web browser without any software installation. Guidance: 
 
 https://github.com/rezamarzban/mathjs/tree/main/mathnotepad
 
