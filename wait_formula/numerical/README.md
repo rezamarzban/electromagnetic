@@ -45,3 +45,5 @@ The calculation speed of `numpy` is more than calculation speed of `sympy` for W
 * Accelerated numerical method calculation speed with `numba`: Very fast
 
 The `sympy` calculate one case of Wait formula in less than a minute, While `numba` calculate thousand cases of Wait formula in less than a minute. So with `numba` it is easy to ploting results vs variable.
+
+Also here is `FORTRAN` code that is very fast.
