@@ -6,7 +6,7 @@ program wait_formula
     complex :: integral1, integral2, integral3
 
     pi = 3.14
-    beta = 2.0 * 3.14 / 100.0
+    beta = 2.0 * pi / 100.0
     a = 18.0
     h = 20.0
     infinity = 1000
