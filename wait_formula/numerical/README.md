@@ -34,6 +34,48 @@ plt.legend()
 plt.show()
 ```
 
+Or with CUDA:
+
+```
+import cupy as cp
+import matplotlib.pyplot as plt
+from numpy import pi, arange, exp, sin, cos, sqrt, zeros_like
+
+def compute_norm_deltaZ(a, h, beta):
+    rho = cp.arange(a, 1000, 0.02)
+    rho_gpu = cp.asarray(rho)  # Convert to CuPy array
+
+    # Compute the integrals using CuPy
+    exp_term1 = cp.exp(-1j * 2 * beta * cp.sqrt(rho_gpu ** 2 + h ** 2)) / rho_gpu
+    trapz1 = cp.trapz(exp_term1, rho_gpu)
+
+    exp_term2 = cp.exp(-beta * 1j * (cp.sqrt(rho_gpu ** 2 + h ** 2) + rho_gpu)) / rho_gpu
+    trapz2 = cp.trapz(exp_term2, rho_gpu)
+
+    exp_term3 = cp.exp(-1j * 2 * beta * rho_gpu) / rho_gpu
+    trapz3 = cp.trapz(exp_term3, rho_gpu)
+
+    norm_deltaZ = (-2 / (cp.sin(beta * h) ** 2)) * (trapz1 - 2 * cp.cos(beta * h) * trapz2 - cp.cos(beta * h) ** 2 * trapz3)
+
+    return cp.asnumpy(cp.real(norm_deltaZ))  # Convert result back to numpy array
+
+beta = 2 * pi / 100
+h = 25
+a_values = arange(10, 250)
+norm_deltaZ_values = zeros_like(a_values, dtype=float64)
+
+for i, a in enumerate(a_values):
+    norm_deltaZ_values[i] = compute_norm_deltaZ(a, h, beta)
+
+plt.plot(a_values / h, norm_deltaZ_values, label="h/λ=0.25")
+plt.xlabel('a/h')
+plt.ylabel('Normalized radiation resistance')
+plt.title('Normalized radiation resistance vs. a/h')
+plt.grid(True)
+plt.legend()
+plt.show()
+```
+
 ![image6](plot.png)
 
 Please be noticed that infinity at numerical method is defined by a large number value in code such as:`1000`, `10000`, `100000`, ... .
