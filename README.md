@@ -1,9 +1,9 @@
 # electromagnetic
 Electromagnetic formulas, simulation softwares and codes
 
-The goal of these codes is knockout the complex physics electromagnetic equations and calculations by few lines of MATLAB and Python codes. It is head of complex physics electromagnetic equations and calculations, It goes straight to the point instead of giving foliage for solving the problem immediately.
+The goal of these codes is to simplify complex electromagnetic physics equations and calculations into just a few lines of MATLAB and Python code. These codes get straight to the point, avoiding unnecessary details, to solve problems efficiently.
 
-All chapter equations of a physics electromagnetic book gathered together in few lines of MATLAB and Python codes here. For example deriving and calculating Poynting Vector integral from farfield radiation electricity field equation for calculating most critical antenna behaviors such as radiated power and radiation resistance in few lines of Python code:
+All the equations from a physics textbook on electromagnetism are condensed into a few lines of MATLAB and Python code here. For example, deriving and calculating the Poynting Vector integral from the far-field radiation electric field equation allows you to determine critical antenna behaviors such as radiated power and radiation resistance in just a few lines of Python code:
 
 short dipole antenna equations 
 
@@ -25,7 +25,7 @@ print(Power)
 print(Radiation_resistance)
 ```
 
-In addition to printing short dipole antenna equations in the prettiest way use this code as below by continue of above code, Also mentioned in `shortdipoleEquations.ipynb` code completely:
+In addition to printing short dipole antenna equations in a clear and concise format, you can use this code as shown below, continuing from the previous example. This is also fully explained in the `shortdipoleEquations.ipynb` file:
 
 ```
 from sympy import init_printing
@@ -34,14 +34,14 @@ init_printing()
 
 ![image1](shortdipoleEquations.jpg)
 
-Also here is various numerical method codes in different languages (MATLAB, Python, FORTRAN, Java, C++, JavaScript, HTML), The `shortdipoleNumerical.js` code can be used at `Math Notepad` which powered by `mathjs.org`, I mean that it need `mathjs` library to running, Just with a web browser without any software installation. Guidance: 
+Additionally, various numerical method codes are provided in different languages (MATLAB, Python, FORTRAN, Java, C++, JavaScript, HTML). The `shortdipoleNumerical.js` code can be used in `Math Notepad`, which is powered by `mathjs.org`. This means you only need a web browser to run it, without any software installation. Guidance can be found here:
 
 https://github.com/rezamarzban/mathjs/tree/main/mathnotepad
 
-Also another web based code, Run `shortdipoleNumerical.html` code by downloading and opening it with web browser at any OS without any used library even without internet connection. And you can edit `shortdipoleNumerical.html` with `Notepad` simply. So:
+Another web-based code is available: run the `shortdipoleNumerical.html` code by downloading and opening it in a web browser on any OS, without requiring any additional libraries or an internet connection. You can also easily edit `shortdipoleNumerical.html` with a simple text editor like `Notepad`. So:
 
 IDE: `Notepad`
 
 Compiler: `Web browser`
 
-The most simple things in the world of IT and programing languages that solve most complex things in the world of Math and Physics.
+These are the simplest tools in the world of IT and programming languages that can solve the most complex problems in the world of math and physics.
