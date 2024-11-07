@@ -155,7 +155,7 @@ Tsmax=2048;     %maximum number of time samples
 Is=0;
 %***************************start of FDTD loop******************
 for n=1:Tsmax
-    Ts=Ts+1;
+    Ts=Ts+dt;
 %***************************Dx field****************************
     for i=2:px
         for j=2:NY
@@ -249,9 +249,8 @@ for n=1:Tsmax
         end
  end
  %***********************Source**********************************
- t0=20.0;
- tw=6.0;
- source(n)=exp(-0.5*(((Ts-t0)/tw)^2));   
+ f=300e6;
+ source(n)=sin(2 * pi * f * Ts);   
  dz(xc,yc,zc)=source(n);
  %************************Calculating E from D*******************
   
@@ -426,8 +425,8 @@ end
 %-------------------end of FDTD loop---------------------------------------
 %-------------------calculating the input impedance------------------------
 I_input=curr_dipole(ceil(Nd/2),:);
-Vfreq=fft(source);
-Ifreq=fft(I_input);
+Vfreq=source;
+Ifreq=I_input;
 df=1/(dt*Tsmax);    % frequency step
 Zin=Vfreq./Ifreq;
 Rin=real(Zin);
@@ -435,23 +434,3 @@ Xin=imag(Zin);
 Yin=Ifreq./Vfreq;
 Gin=real(Yin);
 Bin=imag(Yin);
-curr_dipole_f=fft(transpose(curr_dipole)); 
-I_f300=curr_dipole_f(floor(300*10^6/df),:)/Tsmax; %current distribution of dipole at the frequency closest to 300 MHz
-
-%-----------Calculating pattern at 300 MHz---------------------------------
-theta=(0:1:180)*pi/180;
-dz=cell_x;
-f=0;
-for jj=1:181
-for j=1:length(I_f300)-1
-    zl=-0.25+((j-1)*dz);
-    f=f+(I_f300(j)*dz*exp(2*pi*1i*zl*cos(theta(jj))));
-end
-f_un(jj)=f;
-f=0;
-end
-F=f_un.*sin(theta)/max(abs(f_un));
-polar(theta,abs(F))
-hold on
-theta1=(180:1:360)*pi/180;
-polar(theta1,abs(F))
