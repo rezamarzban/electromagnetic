@@ -1,4 +1,4 @@
-To calculate the radiation resistance \( R_{\text{rad}} \) of a **short vertical wire antenna** at **extremely low frequencies** using Maxwell’s equations and the magnetic vector potential, we derive the formula and provide a Python implementation.
+To calculate the radiation resistance \( R_{\text{rad}} \) of a **short monopole antenna** at **low frequencies** using Maxwell’s equations and the magnetic vector potential, here is derivation of the formula.
 
 ---
 
