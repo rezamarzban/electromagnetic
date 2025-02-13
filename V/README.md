@@ -1,4 +1,4 @@
-### Key Formulas for Dipole Antenna Analysis
+### Key Formulas for Antenna Analysis
 
 #### 1. Current Magnitude:
 $$|I|=\frac{V_{RMS}}{\sqrt{R_r^2 + X^2}}$$
