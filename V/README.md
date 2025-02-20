@@ -1,7 +1,7 @@
 ### Key Formulas for Antenna Analysis
 
 #### 1. Current Magnitude (V is peak voltage):
-$$|I|=\frac{V}{\sqrt{R_r^2 + X^2}}$$
+$$|I|=\frac{V}{Z}=\frac{V}{\sqrt{R_r^2 + X^2}}$$
 
 #### 2. Phase Angle:
 $$\phi=\arctan\left(\frac{X}{R_r}\right)$$
