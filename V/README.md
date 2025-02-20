@@ -14,3 +14,7 @@ $$I_{\text{reac}}=|I|\sin\phi$$
 
 #### 5. Radiated Power:
 $$P_{\text{rad}}=\frac{1}{2}|I|^2R_r$$
+
+### Verification 
+
+The accuracy of these formulas is verified by same simulation results in `Altair FEKO`.
