@@ -31,7 +31,7 @@ def print_equations():
 
 def main():
     # Sample input values:
-    V = 10.0      # RMS Voltage in volts
+    V = 10.0      # Voltage in volts
     R_r = 50.0    # Radiation resistance in ohms
     X = 25.0      # Reactance in ohms
 
