@@ -1,1 +1,1 @@
-**Hankel Function of the Second Kind Zero Order** is used to calculate farfield electricity field of this **HED** antenna in the **TEM** mode in the Earth-ionosphere waveguide.
+**Hankel Function of the Second Kind Zero Order** is used to calculate farfield electricity field of this **HED (Horizontal Electric Dipole)** antenna in the **TEM** mode in the Earth-Ionosphere waveguide.
