@@ -1,3 +1,4 @@
+```python
 import sympy as sp
 
 # Define the symbols used in the derivation.
@@ -59,3 +60,4 @@ sp.pretty_print(Pr)
 
 print("\n5. Radiation Resistance R_r:")
 sp.pretty_print(Rr_expr)
+```
