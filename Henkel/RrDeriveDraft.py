@@ -1,5 +1,3 @@
-
-
 import sympy as sp
 
 # Define the symbols used in the derivation.
