@@ -79,6 +79,7 @@ Let’s derive this step-by-step:
 #### Significance
 This $E_z$ equation predicts signal strength and directionality, essential for ELF communication system design, such as optimizing transmitter placement and power.
 
+---
 
 ### Summary
 - **Waveguide Propagation**: The TM₀ mode’s $k_g \approx k_0$ and $Z_w \approx \eta_0 \frac{h}{λ}$ show how ELF waves travel globally with low loss.
@@ -86,6 +87,7 @@ This $E_z$ equation predicts signal strength and directionality, essential for E
 
 These derivations provide a complete understanding of ELF wave behavior and source-field relationships in the Earth-ionosphere waveguide.
 
+---
 
 Let’s derive the radiation resistance $R_r$ for an extremely low frequency (ELF) horizontal electric dipole (HED) buried beneath the Earth’s surface in the Earth-ionosphere waveguide, aiming to arrive at the specified equation $R_r = \frac{\pi Z_{\text{earth}}^2 l^2}{4 \eta_0 h \lambda}$. We’ll start from the far-field electric field and proceed systematically, ensuring all steps align with the physical context and the target expression.
 
@@ -256,7 +258,7 @@ Assuming $Z_{\text{earth}}^2$ denotes the magnitude squared, we have:
 $$ R_r = \frac{\pi Z_{\text{earth}}^2 l^2}{4 \eta_0 h \lambda} $$
 
 
-### Final Answer
+### Final Equation 
 The radiation resistance for a buried HED in the Earth-ionosphere waveguide, derived from the adjusted far-field electric field, is:
 
 $$ R_r = \frac{\pi Z_{\text{earth}}^2 l^2}{4 \eta_0 h \lambda} $$
