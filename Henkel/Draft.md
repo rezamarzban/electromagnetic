@@ -1,3 +1,5 @@
+Rr equation derivation 
+
 ```python
 import sympy as sp
 
