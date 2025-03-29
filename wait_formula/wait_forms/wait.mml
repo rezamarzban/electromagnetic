@@ -1,0 +1,112 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi mathvariant="normal">Δ</mi>
+  <msub>
+    <mi>Z</mi>
+    <mi>T</mi>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mo>−</mo>
+      <mi>η</mi>
+    </mrow>
+    <mrow>
+      <mn>2</mn>
+      <mi>π</mi>
+      <msup>
+        <mi>sin</mi>
+        <mn>2</mn>
+      </msup>
+      <mo data-mjx-texclass="NONE">⁡</mo>
+      <mi>β</mi>
+      <mi>h</mi>
+    </mrow>
+  </mfrac>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <msubsup>
+      <mo data-mjx-texclass="OP">∫</mo>
+      <mi>a</mi>
+      <mrow>
+        <mi mathvariant="normal">∞</mi>
+      </mrow>
+    </msubsup>
+    <mfrac>
+      <msup>
+        <mi>e</mi>
+        <mrow>
+          <mo>−</mo>
+          <mi>j</mi>
+          <mn>2</mn>
+          <mi>β</mi>
+          <mi>r</mi>
+        </mrow>
+      </msup>
+      <mi>ρ</mi>
+    </mfrac>
+    <mi>d</mi>
+    <mi>ρ</mi>
+    <mo>−</mo>
+    <mn>2</mn>
+    <mi>cos</mi>
+    <mo data-mjx-texclass="NONE">⁡</mo>
+    <mi>β</mi>
+    <mi>h</mi>
+    <msubsup>
+      <mo data-mjx-texclass="OP">∫</mo>
+      <mi>a</mi>
+      <mrow>
+        <mi mathvariant="normal">∞</mi>
+      </mrow>
+    </msubsup>
+    <mfrac>
+      <msup>
+        <mi>e</mi>
+        <mrow>
+          <mo>−</mo>
+          <mi>j</mi>
+          <mi>β</mi>
+          <mo stretchy="false">(</mo>
+          <mi>r</mi>
+          <mo>+</mo>
+          <mi>ρ</mi>
+          <mo stretchy="false">)</mo>
+        </mrow>
+      </msup>
+      <mi>ρ</mi>
+    </mfrac>
+    <mi>d</mi>
+    <mi>ρ</mi>
+    <mo>−</mo>
+    <msup>
+      <mi>cos</mi>
+      <mn>2</mn>
+    </msup>
+    <mo data-mjx-texclass="NONE">⁡</mo>
+    <mi>β</mi>
+    <mi>h</mi>
+    <msubsup>
+      <mo data-mjx-texclass="OP">∫</mo>
+      <mi>a</mi>
+      <mrow>
+        <mi mathvariant="normal">∞</mi>
+      </mrow>
+    </msubsup>
+    <mfrac>
+      <msup>
+        <mi>e</mi>
+        <mrow>
+          <mo>−</mo>
+          <mi>j</mi>
+          <mn>2</mn>
+          <mi>β</mi>
+          <mi>ρ</mi>
+        </mrow>
+      </msup>
+      <mi>ρ</mi>
+    </mfrac>
+    <mi>d</mi>
+    <mi>ρ</mi>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+</math>

@@ -1,0 +1,1 @@
+∆Z = (-eta / (2 * pi * sin^2(beta * h))) * ((integral from a to infinity of (e^(-j * 2 * beta * r)) / rho d rho) - (2 * cos(beta * h) * integral from a to infinity of (e^(-j * beta * (r + rho))) / rho d rho) - (cos^2(beta * h) * integral from a to infinity of (e^(-j * 2 * beta * rho)) / rho d rho))

@@ -1,0 +1,5 @@
+After running this MATLAB code, Run `mean(Rin)` command in MATLAB command line to getting radiation resistance, It will return `75` Ohms approx, The FDTD method uses Maxwell equations with numerical method to solving electromagnetic waves problems, This method is applicable for any antenna length and wave frequency, While common equations in electromagnetic books are not applicable.
+
+According to equations for halfwave dipole antennas in the **Kraus 1988**:227 (`Kraus, John D. (1988). Antennas (2nd ed.). Tata McGraw-Hill`) and **Balanis 2005**:216 (`Balanis, Constantine A. (2005). Antenna Theory: Analysis and Design, 3rd Ed. John Wiley and Sons`), Also according to these antennas specifications in the real world, The radiation resistance of halfwave dipole antennas is about `73` Ohms.
+
+The advantage of this code is that it performs the FDTD simulation using only simple mathematical functions and programming within a single file with less lines of codes, without utilizing any tools, something that cannot be found elsewhere.
