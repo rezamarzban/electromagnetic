@@ -32,3 +32,7 @@ anim = Table[
   {T, 0, Pi - Pi/ncell, Pi/ncell}
 ];
 ```
+
+It's equivalent in python is `ElectricField_RadiatingDipole_V2.py` code.
+
+Please be note that another python code, The `ElectricField_RadiatingDipole.py` code, is educational and not real.
