@@ -33,6 +33,6 @@ anim = Table[
 ];
 ```
 
-It's equivalent in python is `ElectricField_RadiatingDipole_V2.py` code.
+Its equivalent code in python is `ElectricField_RadiatingDipole_V2.py` code.
 
-Please be note that another python code, The `ElectricField_RadiatingDipole.py` code, is educational and not real.
+Please be noticed that another python code, The `ElectricField_RadiatingDipole.py` code animation, is normalized and educational.
