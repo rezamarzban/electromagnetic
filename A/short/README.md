@@ -1,6 +1,6 @@
 
 ### Overview
-The analysis computes the radiation resistance ($R_\mathrm{rad}$) of a short vertical monopole antenna at low frequencies using two methods: a first-principles approach (via vector potential, far-field electric field, and Poynting vector integration) and the standard formula. Assumptions include a triangular current distribution $$  I(z) = I_0 (1 - z/h)  $$ for $0 \leq z \leq h$, a perfect ground plane, and $h \ll \lambda$. Parameters are $h = 3000$ m, $f = 100$ Hz ($\lambda = c/f = 3 \times 10^6$ m, $h/\lambda = 0.001$), and $I_0 = 1$ A, yielding $R_\mathrm{rad} \approx 3.95 \times 10^{-4} \, \Omega$.
+The analysis computes the radiation resistance ($R_\mathrm{rad}$) of a short vertical monopole antenna at low frequencies using two methods: a first-principles approach (via vector potential, far-field electric field, and Poynting vector integration) and the standard formula. Assumptions include a triangular current distribution $$I(z) = I_0 (1 - z/h)$$ for $0 \leq z \leq h$, a perfect ground plane, and $h \ll \lambda$. Parameters are $h = 3000$ m, $f = 100$ Hz ($\lambda = c/f = 3 \times 10^6$ m, $h/\lambda = 0.001$), and $I_0 = 1$ A, yielding $R_\mathrm{rad} \approx 3.95 \times 10^{-4} \, \Omega$.
 
 ### Step 1: Constants and Parameters
 - **Equations**:
