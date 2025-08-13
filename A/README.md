@@ -51,6 +51,39 @@ The magnetic vector potential $A_z$ describes the source of the electromagnetic 
 
 **Explanation**: The vector potential $A_z$ is derived from the current distribution using the retarded potential formula. The integral accounts for the phase delay ($e^{j k z' \cos \theta}$) due to observation at angle $\theta$ and distance $r$ in the far field ($r \gg \lambda, L$). The result matches standard antenna theory for a sinusoidal current.
 
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+
+# Constants and parameters
+mu_0 = 4 * pi * 1e-7
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+beta = k * dipole_length / 2
+theta = pi / 2  # Example angle (rad)
+r = 1e6  # Example distance (m)
+
+# Equation implementation
+sin_theta = np.sin(theta)
+if np.abs(sin_theta) < 1e-8:
+    integral = dipole_length / 2
+else:
+    cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+    denom = np.sin(beta) * sin_theta**2
+    if np.abs(denom) < 1e-12:
+        integral = dipole_length / 2
+    else:
+        integral = (2 / k) * cos_term / denom
+A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+
+print(f"Magnetic vector potential A_z: {A_z_value:.2e} Wb/m")
+```
+
 ## 6. Electric Field
 The far-field electric field component $E_\theta$ is derived from the vector potential.
 
@@ -60,6 +93,43 @@ The far-field electric field component $E_\theta$ is derived from the vector pot
 $$E_\theta = j \frac{\eta_0 I_0 e^{-j k r}}{2 \pi r} \frac{\cos(\beta \cos \theta) - \cos \beta}{\sin \beta \sin \theta}.$$
 The code uses $-j$, a convention choice (time factor $e^{j \omega t}$ vs. $e^{-j \omega t}$), but magnitudes are consistent.
 
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+
+# Constants and parameters (reusing from previous)
+mu_0 = 4 * pi * 1e-7
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+omega = 2 * pi * frequency
+beta = k * dipole_length / 2
+theta = pi / 2  # rad
+r = 1e6  # m
+
+# Compute A_z first
+sin_theta = np.sin(theta)
+if np.abs(sin_theta) < 1e-8:
+    integral = dipole_length / 2
+else:
+    cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+    denom = np.sin(beta) * sin_theta**2
+    if np.abs(denom) < 1e-12:
+        integral = dipole_length / 2
+    else:
+        integral = (2 / k) * cos_term / denom
+A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+
+# Equation
+E_theta_value = -1j * omega * A_z_value * np.sin(theta)
+
+print(f"Electric field E_theta: {E_theta_value:.2e} V/m")
+```
+
 ## 7. Magnetic Field
 The far-field magnetic field component $H_\phi$ is related to the electric field.
 
@@ -67,12 +137,92 @@ The far-field magnetic field component $H_\phi$ is related to the electric field
 
 **Explanation**: In the far field, the electromagnetic wave is a TEM wave, with $H_\phi = E_\theta / \eta_0$, where $\eta_0$ is the intrinsic impedance. This follows from Maxwell’s equations and the plane-wave-like behavior far from the antenna.
 
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+
+# Constants and parameters (reusing)
+mu_0 = 4 * pi * 1e-7
+epsilon_0 = 8.854187817e-12
+eta_0 = np.sqrt(mu_0 / epsilon_0)
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+omega = 2 * pi * frequency
+beta = k * dipole_length / 2
+theta = pi / 2  # rad
+r = 1e6  # m
+
+# Compute A_z and E_theta first
+sin_theta = np.sin(theta)
+if np.abs(sin_theta) < 1e-8:
+    integral = dipole_length / 2
+else:
+    cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+    denom = np.sin(beta) * sin_theta**2
+    if np.abs(denom) < 1e-12:
+        integral = dipole_length / 2
+    else:
+        integral = (2 / k) * cos_term / denom
+A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+E_theta_value = -1j * omega * A_z_value * np.sin(theta)
+
+# Equation
+H_phi_value = E_theta_value / eta_0
+
+print(f"Magnetic field H_phi: {H_phi_value:.2e} A/m")
+```
+
 ## 8. Time-Averaged Poynting Vector Magnitude
 The time-averaged power density $S$ quantifies the radiated power flux.
 
 **Equation**: $$S(r, \theta) = \frac{1}{2} \operatorname{Re}(E_\theta H_\phi^*) = \frac{|E_\theta|^2}{2 \eta_0}$$
 
 **Explanation**: The Poynting vector $\mathbf{S} = \frac{1}{2} \operatorname{Re}(\mathbf{E} \times \mathbf{H}^*)$ gives the time-averaged power density. Since $\mathbf{E} = E_\theta \hat{\theta}$, $\mathbf{H} = H_\phi \hat{\phi}$, and $E_\theta = \eta_0 H_\phi$, the magnitude is $S = \frac{1}{2} |E_\theta|^2 / \eta_0$. This represents the power radiated per unit area.
+
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+
+# Constants and parameters (reusing)
+mu_0 = 4 * pi * 1e-7
+epsilon_0 = 8.854187817e-12
+eta_0 = np.sqrt(mu_0 / epsilon_0)
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+omega = 2 * pi * frequency
+beta = k * dipole_length / 2
+theta = pi / 2  # rad
+r = 1e6  # m
+
+# Compute E_theta first
+sin_theta = np.sin(theta)
+if np.abs(sin_theta) < 1e-8:
+    integral = dipole_length / 2
+else:
+    cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+    denom = np.sin(beta) * sin_theta**2
+    if np.abs(denom) < 1e-12:
+        integral = dipole_length / 2
+    else:
+        integral = (2 / k) * cos_term / denom
+A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+E_theta_value = -1j * omega * A_z_value * np.sin(theta)
+
+# Equation
+poynting_value = (np.abs(E_theta_value)**2) / (2 * eta_0)
+
+print(f"Poynting vector magnitude S: {poynting_value:.2e} W/m²")
+```
 
 ## 9. Total Radiated Power
 The total radiated power $P_\mathrm{rad}$ is obtained by integrating the Poynting vector over a sphere.
@@ -85,9 +235,105 @@ Substituting $S = \frac{|E_\theta|^2}{2 \eta_0}$, the integral becomes:
 $$P_\mathrm{rad} = \frac{\eta_0 I_0^2}{4 \pi \sin^2 \beta} \int_0^\pi \frac{[\cos(\beta \cos \theta) - \cos \beta]^2}{\sin \theta} \, d\theta.$$
 This is evaluated numerically due to the complexity of the integrand, which involves cosine and sine integral functions (Ci, Si) in analytical forms.
 
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+from scipy.integrate import quad
+
+# Constants and parameters
+mu_0 = 4 * pi * 1e-7
+epsilon_0 = 8.854187817e-12
+eta_0 = np.sqrt(mu_0 / epsilon_0)
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+omega = 2 * pi * frequency
+beta = k * dipole_length / 2
+r = 1e6  # m (arbitrary far-field distance)
+
+# Helper function for Poynting (as in equation 8)
+def poynting(theta, r):
+    sin_theta = np.sin(theta)
+    if np.abs(sin_theta) < 1e-8:
+        integral = dipole_length / 2
+    else:
+        cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+        denom = np.sin(beta) * sin_theta**2
+        if np.abs(denom) < 1e-12:
+            integral = dipole_length / 2
+        else:
+            integral = (2 / k) * cos_term / denom
+    A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+    E_theta_value = -1j * omega * A_z_value * np.sin(theta)
+    return (np.abs(E_theta_value)**2) / (2 * eta_0)
+
+# Equation: Integrand and integration
+def integrand(theta):
+    return poynting(theta, r) * 2 * pi * r**2 * np.sin(theta)
+
+P_rad, _ = quad(integrand, 0, pi, epsabs=1e-8, epsrel=1e-4, limit=1000)
+
+print(f"Total radiated power P_rad: {P_rad:.2f} W")
+```
+
 ## 10. Radiation Resistance
 The radiation resistance $R_\mathrm{rad}$ relates the radiated power to the input current.
 
 **Equation**: $$R_\mathrm{rad} = \frac{2 P_\mathrm{rad}}{I_0^2}$$
 
 **Explanation**: The radiation resistance is defined via the time-averaged power radiated, $P_\mathrm{rad} = \frac{1}{2} I_0^2 R_\mathrm{rad}$, where $I_0$ is the peak current amplitude at the feed point. Thus, $R_\mathrm{rad} = 2 P_\mathrm{rad} / I_0^2$. For a half-wave dipole ($L = \lambda/2$, $\beta = \pi/2$), $R_\mathrm{rad} \approx 73 \, \Omega$. For $L = n\lambda$ (integer $n$), $\sin \beta \approx 0$, causing $R_\mathrm{rad}$ to approach infinity, as handled in the code.
+
+```
+import numpy as np
+from scipy.constants import mu_0, epsilon_0, pi, c
+from scipy.integrate import quad
+
+# Constants and parameters (reusing)
+mu_0 = 4 * pi * 1e-7
+epsilon_0 = 8.854187817e-12
+eta_0 = np.sqrt(mu_0 / epsilon_0)
+c = 3e8
+frequency = 100e6
+wavelength = c / frequency
+L_over_lambda = 0.5
+dipole_length = L_over_lambda * wavelength
+I0 = 1.0
+k = 2 * pi / wavelength
+omega = 2 * pi * frequency
+beta = k * dipole_length / 2
+r = 1e6  # m
+
+# Helper: Poynting function
+def poynting(theta, r):
+    sin_theta = np.sin(theta)
+    if np.abs(sin_theta) < 1e-8:
+        integral = dipole_length / 2
+    else:
+        cos_term = np.cos(beta * np.cos(theta)) - np.cos(beta)
+        denom = np.sin(beta) * sin_theta**2
+        if np.abs(denom) < 1e-12:
+            integral = dipole_length / 2
+        else:
+            integral = (2 / k) * cos_term / denom
+    A_z_value = (mu_0 * I0 * np.exp(-1j * k * r) / (4 * pi * r)) * integral
+    E_theta_value = -1j * omega * A_z_value * np.sin(theta)
+    return (np.abs(E_theta_value)**2) / (2 * eta_0)
+
+# Compute P_rad first
+def integrand(theta):
+    return poynting(theta, r) * 2 * pi * r**2 * np.sin(theta)
+
+P_rad, _ = quad(integrand, 0, pi, epsabs=1e-8, epsrel=1e-4, limit=1000)
+
+# Equation
+if np.abs(np.sin(beta)) < 1e-12:
+    print("Sin(beta) is zero, radiation resistance approaches infinity.")
+else:
+    R_rad = 2 * P_rad / I0**2
+    print(f"Radiation resistance R_rad: {R_rad:.2f} ohms")
+```
+
