@@ -5,7 +5,7 @@ A half-wave dipole antenna can be modeled in SPICE simulations using its equival
 - Radiation resistance $R_r = 73$ Ω.
 - Inductive reactance $X = 42.5$ Ω.
 
-To add this to the netlist, connect a series RL circuit from the feedpoint (node 3 in the original circuit) to ground (node 0). The inductance $L$ is calculated based on the operating frequency $f$ (which f = 1/(2π√(LC)) based on L1 and C1):
+To add this to the netlist, connect a series RL circuit from the feedpoint (node 3 in the original circuit) to ground (node 0). The inductance $L$ is calculated based on the operating frequency $f = \(\frac{1}{2\pi\sqrt{LC}}\)$ (which f = 1/(2π√(LC)) based on L1 and C1):
 
 $$
 L = \frac{X}{2 \pi f} \approx 10 \, \mu\text{H}
