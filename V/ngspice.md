@@ -155,4 +155,6 @@ Lant 4 0 {Lant_str}
 
 This generator produces a valid SPICE netlist that will oscillate (or resonate) exactly at the requested frequency with the exact desired RMS current through the 73 Ω antenna resistance, for any frequency from audio to UHF and beyond.
 
+[Live preview](https://htmlpreview.github.io/?https://github.com/rezamarzban/electromagnetic/blob/main/V/fp2netlist.html)
+
 See `extraequations.md` for more explanation.
