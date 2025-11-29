@@ -55,7 +55,62 @@ hardcopy sim.eps v(3)
 .end
 ```
 
-# Complete Summary and SPICE Netlist Generator for the Scaled Oscillator
+# Adding a Half-Wave Dipole Antenna to an NGSPICE Netlist
+
+```
+V1 1 0 
+R1 1 2 0.01
+L1 2 3 1u
+C1 3 0 100n
+```
+
+## Overview
+A thin half-wave dipole has input impedance  
+**Zₐ = Rᵣ + jXₐ = 73 + j42.5 Ω** (exact values used in most literature)  
+where  
+- Rᵣ = 73 Ω → radiation resistance  
+- Xₐ = 42.5 Ω → input reactance  
+
+Magnitude of antenna impedance:  
+**│Zₐ│ = √(73² + 42.5²) = √(5329 + 1806.25) = √7135.25 = 84.49408 Ω** (exact)
+
+## Exact Scaling and Resonance Condition
+We deliberately scale the parallel LC tank such that its characteristic impedance equals the antenna reactance:  
+**Z₀ = √(L₁/C₁) = Xₐ = 42.5 Ω**
+
+This forces:  
+Lₐₙₜ = Xₐ / ω = 42.5 / (2πf)  
+and at resonance ω₀ = 1/√(L₁C₁), the antenna branch presents exactly +j42.5 Ω, which perfectly cancels the –j42.5 Ω of the capacitor branch (C₁). The total load seen at node 3 becomes exactly **73 Ω real**.
+
+## Exact Voltage Step-Up and Current Calculation (no approximations)
+
+Let V₁ be the **peak** voltage of the sinusoidal source (AC 1 in SPICE).  
+RMS source voltage: V₁/√2
+
+Because the tank is scaled with Z₀ = 42.5 Ω and is loaded by exactly 73 Ω real at resonance, the voltage at the feedpoint (node 3) is:
+
+**V₃₍ₚₑₐₖ₎ = V₁ × (│Zₐ│ / Z₀) = V₁ × (84.49408 / 42.5) = V₁ × 1.9880847**
+
+RMS voltage across the antenna branch:  
+**V₃₍ᵣₘₛ₎ = V₁ × 1.9880847 / √2**
+
+RMS current through the entire antenna impedance (and through Rant):  
+**Iᵣₘₛ = V₃₍ᵣₘₛ₎ / │Zₐ│ = (V₁ × 1.9880847 / √2) / 84.49408**
+
+Simplifying exactly:
+
+**Iᵣₘₛ = V₁ / (42.5 × √2)**  
+**Iᵣₘₛ = V₁ / 60.104076**
+
+Inverse relation (exact, no rounding):
+
+**V₁₍ₚₑₐₖ₎ = Iᵣₘₛ × 42.5 × √2 = Iᵣₘₛ × 60.104076**
+
+Radiated power (exact):
+
+**Pᵣₐ𝒹 = Iᵣₘₛ² × 73**
+
+# Scaled Resonant Oscillator with Exact Half-Wave Dipole Model
 
 ## Circuit Topology
 ```
@@ -64,97 +119,86 @@ V1 (1) -- R1(0.01Ω) -- (2) -- L1 -- (3) --+-- C1 -- 0
                                          +-- Rant(73Ω) -- Lant -- 0
 ```
 
-## Key Scaling Condition
-Given: $L_\text{ant} = 42.5 \sqrt{L_1 C_1}$  
-This forces the characteristic impedance $\sqrt{L_1 / C_1} = Z_0 = 42.5\,\Omega$  
-and the antenna reactance at resonance $\omega L_\text{ant} = 42.5\,\Omega$.
+## Antenna Parameters (exact)
+Rᵣ  = 73 Ω  
+Xₐ  = 42.5 Ω  
+│Zₐ│ = √(73² + 42.5²) = 84.49407954 Ω
 
-## Exact RMS Current through Rant (Independent of Frequency)
-For peak source voltage $V_\text{peak}$, the RMS current through $R_\text{ant}$ is:
-$$I_\text{rms} = \frac{V_\text{peak}}{Z_0 \sqrt{2}} = \frac{V_\text{peak}}{42.5 \sqrt{2}} = \frac{V_\text{peak} \sqrt{2}}{85}$$
+## Exact Scaling Rule
+Z₀ = √(L₁/C₁) = Xₐ = 42.5 Ω  
+Lₐₙₜ = Xₐ / (2πf) = 42.5 / (2πf)
 
-When $V_\text{peak} = 1\,\text{V}$ (as assumed in earlier calculations):
-$$I_\text{rms} = \frac{\sqrt{2}}{85} \approx 0.016605\,\text{A}$$
+## Exact Component Values for Resonance at Frequency f (Hz)
+C₁ = 1 / (2πf × 42.5)  
+L₁ = 42.5 / (2πf)  
+Lₐₙₜ = 42.5 / (2πf)
 
-This value is constant for any oscillation frequency as long as the scaling $Z_0 = 42.5\,\Omega$ is maintained.
+## Exact Relationship Between Source Peak Voltage and Antenna RMS Current
+Iᵣₘₛ = Vₚₑₐₖ / (42.5 × √2)  
+Vₚₑₐₖ = Iᵣₘₛ × 42.5 × √2 = Iᵣₘₛ × 60.104076
 
-## Component Values for Any Desired Frequency $f$
-To achieve resonance at frequency $f$ (Hz) with $Z_0 = 42.5\,\Omega$:
-$$C_1 = \frac{1}{2\pi f Z_0}$$
-$$L_1 = \frac{Z_0}{2\pi f}$$
-$$L_\text{ant} = \frac{Z_0}{2\pi f}$$
+## Exact Radiated Power
+Pᵣₐ𝒹 = Iᵣₘₛ² × 73 Watt
 
-## Required Peak Voltage for Desired $I_\text{rms}$
-$$V_\text{peak} = I_\text{rms} \cdot Z_0 \cdot \sqrt{2} = I_\text{rms} \cdot 85$$
-
-## Python Code: SPICE Netlist Generator
+## Python Code: Exact SPICE Netlist Generator
 
 ```python
 import math
+
+Z0 = 42.5                                          # Exact scaling impedance (Ω)
+R_r = 73.0                                         # Radiation resistance (Ω)
+X_a = 42.5                                         # Antenna reactance (Ω)
+Z_mag = math.sqrt(R_r**2 + X_a**2)                 # 84.49407954 Ω (exact)
 
 def format_value(val):
     if val == 0:
         return "0"
     exp = math.floor(math.log10(abs(val)))
     suffixes = {0: "", -3: "m", -6: "u", -9: "n", -12: "p", -15: "f"}
-    for e, s in suffixes.items():
+    for e, s in sorted(suffixes.items(), reverse=True):
         if exp >= e:
-            factor = 10**(-e)
-            return f"{val * factor:.10g}{s}"
-    return f"{val:.6g}"
+            return f"{val * 10**(-e):.10g}{s}"
+    return f"{val:.10g}"
 
-def generate_spice_netlist(f_osc, I_rms_target):
+def generate_spice_netlist(f_osc: float, I_rms_target: float) -> str:
     """
-    Generate SPICE netlist for given oscillation frequency (Hz)
-    and desired RMS current through Rant (A)
+    Generate exact SPICE netlist for desired frequency and exact RMS current through Rant.
+    No approximations are used anywhere.
     """
-    Z0 = 42.5                  # Fixed characteristic impedance in ohms
-    pi = math.pi
+    omega = 2 * math.pi * f_osc
     
-    # Component values for resonance at f_osc
-    C1 = 1 / (2 * pi * f_osc * Z0)
-    L1 = Z0 / (2 * pi * f_osc)
-    Lant = Z0 / (2 * pi * f_osc)
+    C1    = 1 / (omega * Z0)
+    L1    = Z0 / omega
+    Lant  = Z0 / omega                     # = X_a / omega
     
-    # Required peak voltage to get desired I_rms
-    V_peak = I_rms_target * Z0 * math.sqrt(2)   # = I_rms * 85
+    # Exact required source peak voltage
+    V_peak = I_rms_target * Z0 * math.sqrt(2)      # = I_rms_target * 60.104076...
     
-    # Format values
-    f_str = f"{f_osc:.10g}"
-    C1_str = format_value(C1)
-    L1_str = format_value(L1)
-    Lant_str = format_value(Lant)
-    V_str = f"{V_peak:.10g}"
-    
-    netlist = f"""* Scaled Resonant Oscillator
-* Oscillation frequency: {f_str} Hz
-* Target RMS current in Rant: {I_rms_target:.10g} A
-* Required peak voltage: {V_str} V
-* Z0 = {Z0} Ω
+    netlist = f"""* Exact Scaled Resonant Oscillator with Half-Wave Dipole
+* Frequency:             {f_osc:.10g} Hz
+* Target I_rms (Rant):   {I_rms_target:.10g} A
+* Required V_peak (V1):  {V_peak:.10g} V
+* Z0 = X_a =             {Z0} Ω
+* |Z_ant| =              {Z_mag:.10g} Ω
 
-V1 1 0 AC {V_str}
+V1 1 0 AC {V_peak:.10g}
 R1 1 2 0.01
-L1 2 3 {L1_str}
-C1 3 0 {C1_str}
-Rant 3 4 73
-Lant 4 0 {Lant_str}
+L1 2 3 {format_value(L1)}
+C1 3 0 {format_value(C1)}
+Rant 3 4 {R_r}
+Lant 4 0 {format_value(Lant)}
 
-* Single frequency AC analysis at resonance
-.ac list {f_str}
-
-* Print RMS current through Rant
-.print ac ir(rant) ii(rant)
+.ac list {f_osc:.10g}
+.print ac i(rant)          $ magnitude of current through Rant
+.print ac ip(rant)         $ phase
+.print ac ir(rant)         $ real part (in-phase, corresponds to radiated power)
 
 .end
 """
     return netlist
 
-# Example usage:
-# print(generate_spice_netlist(1e6, 0.1))   # 1 MHz, 100 mA RMS
+# Example: 1 MHz, exactly 100 mA RMS through radiation resistance
+# print(generate_spice_netlist(1e6, 0.1))
 ```
 
-This generator produces a valid SPICE netlist that will oscillate (or resonate) exactly at the requested frequency with the exact desired RMS current through the 73 Ω antenna resistance, for any frequency from audio to UHF and beyond.
-
-[SPICE netlist generator](https://htmlpreview.github.io/?https://github.com/rezamarzban/electromagnetic/blob/main/V/more/f2net.html)
-
-See `extraequations.md` for more descriptions.
+This version uses **only exact analytical expressions** derived from the circuit topology and the standard 73 + j42.5 Ω dipole model. 
