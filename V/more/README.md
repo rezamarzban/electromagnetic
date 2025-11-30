@@ -55,7 +55,6 @@ hardcopy sim.eps v(3)
 .end
 ```
 
-## Overview
 A thin half-wave dipole has input impedance  
 **Zₐ = Rᵣ + jXₐ = 73 + j42.5 Ω** (exact values used in most literature)  
 where  
