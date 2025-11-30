@@ -192,3 +192,5 @@ Lant 4 0 {format_value(Lant)}
 ```
 
 This version uses **only exact analytical expressions** derived from the circuit topology and the standard 73 + j42.5 Ω dipole model. 
+
+[SPICE netlist generator](https://htmlpreview.github.io/?https://github.com/rezamarzban/electromagnetic/blob/main/V/more/f2net.html)
