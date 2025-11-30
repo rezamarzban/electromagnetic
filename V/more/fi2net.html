@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPICE Netlist Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input { margin-bottom: 10px; }
+        button { margin-top: 10px; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>SPICE Netlist Generator</h1>
+    <p>Enter frequency (Hz) and RMS current through radiation resistance (A) to generate the SPICE netlist.</p>
+    
+    <label for="f_osc">Frequency (Hz):</label>
+    <input type="number" id="f_osc" value="1000000" step="any">
+    
+    <label for="I_rms_target">RMS Current (A):</label>
+    <input type="number" id="I_rms_target" value="0.1" step="any">
+    
+    <button onclick="generateNetlist()">Generate Netlist</button>
+    
+    <h2>Generated Netlist:</h2>
+    <pre id="netlistOutput"></pre>
+
+    <script>
+        const Z0 = 42.5;  // Exact scaling impedance (Ω)
+        const R_r = 73.0; // Radiation resistance (Ω)
+        const X_a = 42.5; // Antenna reactance (Ω)
+        const Z_mag = Math.sqrt(R_r ** 2 + X_a ** 2); // 84.49407954 Ω (exact)
+
+        function formatValue(val) {
+            if (val === 0) {
+                return "0";
+            }
+            const exp = Math.floor(Math.log10(Math.abs(val)));
+            const suffixes = {0: "", -3: "m", -6: "u", -9: "n", -12: "p", -15: "f"};
+            const sortedSuffixes = Object.entries(suffixes).sort((a, b) => b[0] - a[0]);
+            for (let [e, s] of sortedSuffixes) {
+                if (exp >= e) {
+                    const scaled = val * Math.pow(10, -e);
+                    return `${scaled.toPrecision(10)}${s}`;
+                }
+            }
+            return val.toPrecision(10);
+        }
+
+        function generateSpiceNetlist(f_osc, I_rms_target) {
+            const omega = 2 * Math.PI * f_osc;
+            
+            const C1 = 1 / (omega * Z0);
+            const L1 = Z0 / omega;
+            const Lant = Z0 / omega;  // = X_a / omega
+            
+            // Exact required source peak voltage
+            const V_peak = I_rms_target * Z0 * Math.sqrt(2);  // = I_rms_target * 60.104076...
+            
+            const netlist = `* Exact Scaled Resonant Oscillator with Half-Wave Dipole
+* Frequency:             ${f_osc.toPrecision(10)} Hz
+* Target I_rms (Rant):   ${I_rms_target.toPrecision(10)} A
+* Required V_peak (V1):  ${V_peak.toPrecision(10)} V
+* Z0 = X_a =             ${Z0} Ω
+* |Z_ant| =              ${Z_mag.toPrecision(10)} Ω
+
+V1 1 0 AC ${V_peak.toPrecision(10)}
+R1 1 2 0.01
+L1 2 3 ${formatValue(L1)}
+C1 3 0 ${formatValue(C1)}
+Rant 3 4 ${R_r}
+Lant 4 0 ${formatValue(Lant)}
+
+.ac list ${f_osc.toPrecision(10)}
+.print ac i(rant)          $ magnitude of current through Rant
+.print ac ip(rant)         $ phase
+.print ac ir(rant)         $ real part (in-phase, corresponds to radiated power)
+
+.end
+`;
+            return netlist;
+        }
+
+        function generateNetlist() {
+            const f_osc = parseFloat(document.getElementById('f_osc').value);
+            const I_rms_target = parseFloat(document.getElementById('I_rms_target').value);
+            
+            if (isNaN(f_osc) || isNaN(I_rms_target) || f_osc <= 0 || I_rms_target <= 0) {
+                document.getElementById('netlistOutput').textContent = 'Please enter valid positive numbers for frequency and RMS current.';
+                return;
+            }
+            
+            const netlist = generateSpiceNetlist(f_osc, I_rms_target);
+            document.getElementById('netlistOutput').textContent = netlist;
+        }
+    </script>
+</body>
+</html>
