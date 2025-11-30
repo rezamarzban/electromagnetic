@@ -55,15 +55,6 @@ hardcopy sim.eps v(3)
 .end
 ```
 
-# Adding a Half-Wave Dipole Antenna to an NGSPICE Netlist
-
-```
-V1 1 0 
-R1 1 2 0.01
-L1 2 3 1u
-C1 3 0 100n
-```
-
 ## Overview
 A thin half-wave dipole has input impedance  
 **Zₐ = Rᵣ + jXₐ = 73 + j42.5 Ω** (exact values used in most literature)  
