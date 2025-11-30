@@ -5,75 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPICE Netlist Generator</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        label { display: block; margin-top: 10px; }
-        input { margin-bottom: 10px; }
-        button { margin-top: 10px; }
-        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; }
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f4f9; }
+        h1 { color: #333; text-align: center; }
+        .input-group { margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #fff; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        textarea { width: 100%; height: 300px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-family: monospace; font-size: 14px; background-color: #e9e9e9; resize: vertical; }
+        .constants { margin-top: 20px; padding: 10px; border: 1px dashed #666; background-color: #e0f7fa; border-radius: 5px; font-size: small; }
     </style>
 </head>
 <body>
-    <h1>SPICE Netlist Generator</h1>
-    <p>Enter frequency (Hz) and RMS current through radiation resistance (A) to generate the SPICE netlist.</p>
-    
-    <label for="f_osc">Frequency (Hz):</label>
-    <input type="number" id="f_osc" value="1000000" step="any">
-    
-    <label for="I_rms_target">RMS Current (A):</label>
-    <input type="number" id="I_rms_target" value="0.1" step="any">
-    
-    <button onclick="generateNetlist()">Generate Netlist</button>
-    
-    <h2>Generated Netlist:</h2>
-    <pre id="netlistOutput"></pre>
+
+    <h1>📡 SPICE Netlist Generator</h1>
+
+    <div class="constants">
+        <h3>Fixed Antenna Parameters:</h3>
+        <ul>
+            <li>**$Z_0$** (Scaling Impedance): **42.5 $\Omega$**</li>
+            <li>**$R_r$** (Radiation Resistance): **73.0 $\Omega$**</li>
+            <li>**$X_a$** (Antenna Reactance): **42.5 $\Omega$**</li>
+            <li>**$|Z_{ant}|$** (Antenna Magnitude): **84.49407954 $\Omega$** (Calculated)</li>
+        </ul>
+    </div>
+
+    <form id="netlistForm">
+        <div class="input-group">
+            <label for="f_osc">Operating Frequency ($\mathbf{f_{osc}}$) in Hz:</label>
+            <input type="number" id="f_osc" value="1000000" min="0.000001" step="any" required>
+        </div>
+        <div class="input-group">
+            <label for="I_rms_target">Target RMS Current ($\mathbf{I_{rms\_target}}$) through Radiation Resistance in Amperes:</label>
+            <input type="number" id="I_rms_target" value="0.1" min="0" step="any" required>
+        </div>
+        <button type="submit">Generate SPICE Netlist</button>
+    </form>
+
+    <hr>
+
+    <h2>Generated SPICE Netlist:</h2>
+    <textarea id="netlistOutput" readonly placeholder="The SPICE netlist will appear here..."></textarea>
 
     <script>
-        const Z0 = 42.5;  // Exact scaling impedance (Ω)
-        const R_r = 73.0; // Radiation resistance (Ω)
-        const X_a = 42.5; // Antenna reactance (Ω)
-        const Z_mag = Math.sqrt(R_r ** 2 + X_a ** 2); // 84.49407954 Ω (exact)
+        // --- Fixed Constants ---
+        const Z0 = 42.5; 
+        const R_r = 73.0;
+        const X_a = 42.5;
+        // Z_mag = sqrt(R_r**2 + X_a**2)
+        const Z_mag = Math.sqrt(R_r * R_r + X_a * X_a); // 84.49407954... Ω
 
-        function formatValue(val) {
+        /**
+         * Converts a number to a string using standard engineering suffixes (p, n, u, m, K, etc.)
+         * to make it readable for SPICE (e.g., 1e-9 becomes "1n").
+         * @param {number} val - The numeric value.
+         * @returns {string} - The formatted string.
+         */
+        function format_value(val) {
             if (val === 0) {
                 return "0";
             }
+            // SPICE standard suffixes (pico, nano, micro, milli, kilo, etc.)
+            const suffixes = {
+                "-15": "f",
+                "-12": "p",
+                "-9": "n",
+                "-6": "u",
+                "-3": "m",
+                "0": "",
+                "3": "k",
+                "6": "meg",
+                "9": "g"
+            };
+
             const exp = Math.floor(Math.log10(Math.abs(val)));
-            const suffixes = {0: "", -3: "m", -6: "u", -9: "n", -12: "p", -15: "f"};
-            const sortedSuffixes = Object.entries(suffixes).sort((a, b) => b[0] - a[0]);
-            for (let [e, s] of sortedSuffixes) {
-                if (exp >= e) {
-                    const scaled = val * Math.pow(10, -e);
-                    return `${scaled.toPrecision(10)}${s}`;
-                }
+
+            // Find the closest standard exponent (multiple of 3)
+            let e = 3 * Math.floor(exp / 3); 
+
+            // Handle edge case where e is just below the exp threshold for positive exponents
+            if (exp > 0 && exp % 3 !== 0) {
+                 e = 3 * Math.floor(exp / 3);
             }
-            return val.toPrecision(10);
+            // Handle edge case where e is just above the exp threshold for negative exponents
+            if (exp < 0 && exp % 3 !== 0) {
+                 e = 3 * Math.ceil(exp / 3); 
+            }
+            if (e > exp && exp < 0) {
+                e = e - 3;
+            }
+
+            const prefix = suffixes[e.toString()] || "";
+            const scaledVal = val * Math.pow(10, -e);
+
+            // Use toPrecision for up to 10 significant digits
+            return `${scaledVal.toPrecision(10)}${prefix}`;
         }
 
-        function generateSpiceNetlist(f_osc, I_rms_target) {
+        /**
+         * Generates the SPICE netlist based on the input frequency and current.
+         * @param {number} f_osc - Operating frequency in Hz.
+         * @param {number} I_rms_target - Target RMS current through Rant in Amperes.
+         * @returns {string} - The generated SPICE netlist.
+         */
+        function generate_spice_netlist(f_osc, I_rms_target) {
+            if (f_osc <= 0) return "* Error: Frequency must be positive.";
+            if (I_rms_target < 0) return "* Error: RMS current cannot be negative.";
+
             const omega = 2 * Math.PI * f_osc;
             
+            // --- Component Values ---
+            // C1 = 1 / (omega * Z0)
             const C1 = 1 / (omega * Z0);
+            // L1 = Z0 / omega
             const L1 = Z0 / omega;
-            const Lant = Z0 / omega;  // = X_a / omega
+            // Lant = Z0 / omega (since X_a = Z0)
+            const Lant = Z0 / omega;
             
-            // Exact required source peak voltage
-            const V_peak = I_rms_target * Z0 * Math.sqrt(2);  // = I_rms_target * 60.104076...
+            // Exact required source peak voltage: V_peak = I_rms_target * Z0 * sqrt(2)
+            const V_peak = I_rms_target * Z0 * Math.sqrt(2); 
             
+            // Format for display in comments (full precision)
+            const f_osc_str = f_osc.toPrecision(10);
+            const I_rms_target_str = I_rms_target.toPrecision(10);
+            const V_peak_str = V_peak.toPrecision(10);
+            const Z_mag_str = Z_mag.toPrecision(10);
+
+            // Generate the netlist string
             const netlist = `* Exact Scaled Resonant Oscillator with Half-Wave Dipole
-* Frequency:             ${f_osc.toPrecision(10)} Hz
-* Target I_rms (Rant):   ${I_rms_target.toPrecision(10)} A
-* Required V_peak (V1):  ${V_peak.toPrecision(10)} V
-* Z0 = X_a =             ${Z0} Ω
-* |Z_ant| =              ${Z_mag.toPrecision(10)} Ω
+* Frequency:             ${f_osc_str} Hz
+* Target I_rms (Rant):   ${I_rms_target_str} A
+* Required V_peak (V1):  ${V_peak_str} V
+* Z0 = X_a =             ${Z0} \u03A9
+* |Z_ant| =              ${Z_mag_str} \u03A9
 
-V1 1 0 AC ${V_peak.toPrecision(10)}
-R1 1 2 0.01
-L1 2 3 ${formatValue(L1)}
-C1 3 0 ${formatValue(C1)}
+V1 1 0 AC ${V_peak_str}
+R1 1 2 0.01 
+L1 2 3 ${format_value(L1)}
+C1 3 0 ${format_value(C1)}
 Rant 3 4 ${R_r}
-Lant 4 0 ${formatValue(Lant)}
+Lant 4 0 ${format_value(Lant)}
 
-.ac list ${f_osc.toPrecision(10)}
+.ac list ${f_osc_str}
 .print ac i(rant)          $ magnitude of current through Rant
 .print ac ip(rant)         $ phase
 .print ac ir(rant)         $ real part (in-phase, corresponds to radiated power)
@@ -83,18 +156,40 @@ Lant 4 0 ${formatValue(Lant)}
             return netlist;
         }
 
-        function generateNetlist() {
-            const f_osc = parseFloat(document.getElementById('f_osc').value);
-            const I_rms_target = parseFloat(document.getElementById('I_rms_target').value);
+        // --- Event Listener and DOM Interaction ---
+        document.getElementById('netlistForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+
+            // Get inputs and parse as float
+            const f_osc_input = document.getElementById('f_osc').value;
+            const I_rms_target_input = document.getElementById('I_rms_target').value;
             
-            if (isNaN(f_osc) || isNaN(I_rms_target) || f_osc <= 0 || I_rms_target <= 0) {
-                document.getElementById('netlistOutput').textContent = 'Please enter valid positive numbers for frequency and RMS current.';
+            const f_osc = parseFloat(f_osc_input);
+            const I_rms_target = parseFloat(I_rms_target_input);
+            
+            // Check for valid numbers
+            if (isNaN(f_osc) || isNaN(I_rms_target)) {
+                document.getElementById('netlistOutput').value = "* Error: Please enter valid numerical values.";
                 return;
             }
+
+            // Generate the netlist
+            const netlist = generate_spice_netlist(f_osc, I_rms_target);
             
-            const netlist = generateSpiceNetlist(f_osc, I_rms_target);
-            document.getElementById('netlistOutput').textContent = netlist;
-        }
+            // Display the result
+            document.getElementById('netlistOutput').value = netlist;
+        });
+
+        // Generate netlist on load with default values
+        document.addEventListener('DOMContentLoaded', function() {
+            const default_f_osc = parseFloat(document.getElementById('f_osc').value);
+            const default_I_rms_target = parseFloat(document.getElementById('I_rms_target').value);
+            
+            if (!isNaN(default_f_osc) && !isNaN(default_I_rms_target)) {
+                 document.getElementById('netlistOutput').value = generate_spice_netlist(default_f_osc, default_I_rms_target);
+            }
+        });
     </script>
+
 </body>
 </html>
